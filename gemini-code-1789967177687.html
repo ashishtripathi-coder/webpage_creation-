@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anshika & Ashish - Wedding Invitation</title>
+    
+    <meta property="og:title" content="Wedding Invitation: Anshika & Ashish">
+    <meta property="og:description" content="We invite you to celebrate our union on 25th November 2026. Join us for our wedding celebrations!">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=1200">
+    <meta property="og:type" content="website">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FAF8F5',
+                        champagne: {
+                            DEFAULT: '#D4AF37',
+                            light: '#F3E5AB',
+                            dark: '#AA7C11'
+                        },
+                        maroon: {
+                            DEFAULT: '#58111A',
+                            light: '#800020',
+                            dark: '#3A080E'
+                        },
+                        blush: '#F9ECEC',
+                        velvet: '#2C1A1D'
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        script: ['Great Vibes', 'cursive'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        devanagari: ['Noto Serif Devanagari', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Great+Vibes&family=Noto+Serif+Devanagari:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom Animations & Styles */
+        @keyframes floatPetal {
+            0% { transform: translateY(-10vh) rotate(0deg) translateX(0px); opacity: 1; }
+            100% { transform: translateY(105vh) rotate(360deg) translateX(80px); opacity: 0; }
+        }
+        .petal {
+            position: fixed;
+            top: -10px;
+            pointer-events: none;
+            z-index: 50;
+            animation: floatPetal 10s linear infinite;
+        }
+        @keyframes rotateMandala {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .mandala-spin {
+            animation: rotateMandala 60s linear infinite;
+        }
+        .gold-border {
+            border: 2px solid #D4AF37;
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.15), 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .gold-shimmer {
+            background: linear-gradient(110deg, #D4AF37 0%, #FFF3B0 45%, #AA7C11 50%, #D4AF37 100%);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-cream text-velvet font-sans antialiased selection:bg-champagne selection:text-maroon overflow-x-hidden">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // ==========================================
+        // SINGLE CENTRAL CONFIGURATION DATA
+        // Edit all wedding details right here!
+        // ==========================================
+        const WEDDING_CONFIG = {
+            couple: {
+                bride: {
+                    name: "Anshika Pandey",
+                    shortName: "Anshika",
+                    father: "Mr. Indrajeet Pandey",
+                    mother: "Mrs. Vidyotma Pandey",
+                    photo: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600"
+                },
+                groom: {
+                    name: "Ashish Tripathi",
+                    shortName: "Ashish",
+                    father: "Mr. Markandey Nath Tripathi",
+                    mother: "Mrs. Jamwanti Tripathi",
+                    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600"
+                },
+                weddingDate: "2026-11-25T18:00:00",
+                displayDate: "25 November 2026",
+                tagline: "Two hearts, one beautiful journey"
+            },
+            events: {
+                engagement: {
+                    title: "Engagement Ceremony",
+                    date: "16 November 2026",
+                    time: "06:00 PM Onwards",
+                    venue: "Majestic Ganges Inn",
+                    address: "Varanasi, Uttar Pradesh, India",
+                    mapUrl: "https://maps.google.com/?q=Varanasi+Uttar+Pradesh",
+                    image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800"
+                },
+                wedding: {
+                    title: "Wedding Ceremony (Vivah)",
+                    date: "25 November 2026",
+                    time: "07:00 PM Onwards",
+                    venue: "The Retreat",
+                    address: "Mirzapur, Uttar Pradesh, India",
+                    mapUrl: "https://maps.google.com/?q=Mirzapur+Uttar+Pradesh",
+                    image: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800"
+                }
+            },
+            schedule: [
+                { title: "Haldi Ceremony", date: "24 Nov 2026", time: "10:00 AM", venue: "Family Residence" },
+                { title: "Mehendi & Sangeet", date: "24 Nov 2026", time: "06:00 PM", venue: "The Retreat Hall" },
+                { title: "Baraat Reception", date: "25 Nov 2026", time: "06:30 PM", venue: "The Retreat Lawn" },
+                { title: "Pheras / Wedding", date: "25 Nov 2026", time: "09:00 PM", venue: "The Mandap" },
+                { title: "Reception", date: "26 Nov 2026", time: "07:30 PM", venue: "The Retreat Grand Ballroom" }
+            ],
+            ourStory: [
+                {
+                    title: "First Conversation",
+                    date: "Spring 2024",
+                    desc: "A brief greeting turned into hours of effortless conversations, shared smiles, and an undeniable instant connection.",
+                    image: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&q=80&w=500"
+                },
+                {
+                    title: "The First Date",
+                    date: "Summer 2024",
+                    desc: "Over warm coffee and endless laughter, we realized how effortlessly our lives intertwined.",
+                    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=500"
+                },
+                {
+                    title: "The Proposal",
+                    date: "Monsoon 2025",
+                    desc: "With gentle ocean breeze and golden sunset light, a simple question sealed a lifetime of togetherness.",
+                    image: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=500"
+                }
+            ],
+            gallery: [
+                "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=800",
+                "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=800",
+                "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800",
+                "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800",
+                "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=800",
+                "https://images.unsplash.com/photo-1544078751-58fee2d8a03b?auto=format&fit=crop&q=80&w=800"
+            ],
+            contacts: [
+                { relation: "Bride's Family", name: "Indrajeet Pandey", phone: "+91 98765 43210" },
+                { relation: "Groom's Family", name: "Markandey Nath Tripathi", phone: "+91 98765 01234" }
+            ],
+            audioUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=flute-traditional-indian-113338.mp3"
+        };
+
+        // --- SVG Mandala Graphic Component ---
+        const MandalaSvg = ({ className = "w-32 h-32 text-champagne" }) => (
+            <svg viewBox="0 0 100 100" className={className} fill="none" stroke="currentColor" strokeWidth="0.8">
+                <circle cx="50" cy="50" r="46" strokeWidth="0.5" strokeDasharray="2,2"/>
+                <circle cx="50" cy="50" r="38"/>
+                <circle cx="50" cy="50" r="28"/>
+                <circle cx="50" cy="50" r="14"/>
+                {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg, i) => (
+                    <g key={i} transform={`rotate(${deg} 50 50)`}>
+                        <path d="M50 2 C55 18, 55 22, 50 38 C45 22, 45 18, 50 2 Z" fill="rgba(212, 175, 55, 0.08)"/>
+                        <circle cx="50" cy="6" r="1.5" fill="currentColor"/>
+                    </g>
+                ))}
+            </svg>
+        );
+
+        // --- Falling Marigold & Pink Petals Canvas Overlay ---
+        const FallingPetals = () => {
+            useEffect(() => {
+                const petalsCount = 15;
+                const container = document.getElementById('petal-container');
+                if (!container) return;
+                
+                for (let i = 0; i < petalsCount; i++) {
+                    const petal = document.createElement('div');
+                    petal.className = 'petal';
+                    const isGold = Math.random() > 0.5;
+                    petal.style.left = `${Math.random() * 100}vw`;
+                    petal.style.animationDuration = `${6 + Math.random() * 8}s`;
+                    petal.style.animationDelay = `${Math.random() * 5}s`;
+                    petal.style.width = `${12 + Math.random() * 10}px`;
+                    petal.style.height = `${12 + Math.random() * 10}px`;
+                    petal.style.backgroundColor = isGold ? '#D4AF37' : '#E8A7A1';
+                    petal.style.borderRadius = '80% 0 80% 0';
+                    petal.style.opacity = Math.random() * 0.7 + 0.3;
+                    container.appendChild(petal);
+                }
+            }, []);
+            return <div id="petal-container" className="fixed inset-0 pointer-events-none z-50"></div>;
+        };
+
+        // --- Main App Component ---
+        function App() {
+            const [isOpen, setIsOpen] = useState(false);
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            const [activeImage, setActiveImage] = useState(null);
+            const [rsvpForm, setRsvpForm] = useState({ name: '', guests: '1', phone: '', attending: 'yes', message: '' });
+            const [rsvpSubmitted, setRsvpSubmitted] = useState(false);
+
+            const audioRef = useRef(null);
+
+            // Handle Countdown
+            useEffect(() => {
+                const target = new Date(WEDDING_CONFIG.couple.weddingDate).getTime();
+                const interval = setInterval(() => {
+                    const now = new Date().getTime();
+                    const difference = target - now;
+                    if (difference > 0) {
+                        setTimeLeft({
+                            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                            hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                            minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+                            seconds: Math.floor((difference % (1000 * 60)) / 1000)
+                        });
+                    }
+                }, 1000);
+                return () => clearInterval(interval);
+            }, []);
+
+            // Handle Audio Toggle
+            const toggleAudio = () => {
+                if (!audioRef.current) return;
+                if (isPlaying) {
+                    audioRef.current.pause();
+                    setIsPlaying(false);
+                } else {
+                    audioRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+                }
+            };
+
+            const handleOpenInvitation = () => {
+                setIsOpen(true);
+                if (audioRef.current) {
+                    audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+                }
+            };
+
+            const handleNativeShare = () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: `Wedding Invitation: ${WEDDING_CONFIG.couple.bride.shortName} & ${WEDDING_CONFIG.couple.groom.shortName}`,
+                        text: `We invite you to celebrate the marriage of ${WEDDING_CONFIG.couple.bride.name} & ${WEDDING_CONFIG.couple.groom.name}!`,
+                        url: window.location.href,
+                    }).catch(() => {});
+                } else {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("Invitation link copied to clipboard!");
+                }
+            };
+
+            const handleRSVPSubmit = (e) => {
+                e.preventDefault();
+                setRsvpSubmitted(true);
+                setTimeout(() => setRsvpSubmitted(false), 6000);
+            };
+
+            const generateCalendarLink = () => {
+                const title = encodeURIComponent(`Wedding: ${WEDDING_CONFIG.couple.bride.shortName} & ${WEDDING_CONFIG.couple.groom.shortName}`);
+                const details = encodeURIComponent(`Join us in celebrating the wedding of ${WEDDING_CONFIG.couple.bride.name} & ${WEDDING_CONFIG.couple.groom.name}`);
+                const location = encodeURIComponent(`${WEDDING_CONFIG.events.wedding.venue}, ${WEDDING_CONFIG.events.wedding.address}`);
+                return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20261125T133000Z/20261125T183000Z&details=${details}&location=${location}`;
+            };
+
+            return (
+                <div className="relative min-h-screen bg-cream font-sans">
+                    {/* Audio Element */}
+                    <audio ref={audioRef} loop src={WEDDING_CONFIG.audioUrl} preload="auto" />
+                    <FallingPetals />
+
+                    {/* Floating Audio & Action Controls */}
+                    {isOpen && (
+                        <div className="fixed bottom-6 right-6 z-40 flex flex-col gap-3">
+                            <button 
+                                onClick={toggleAudio}
+                                className="w-12 h-12 rounded-full bg-maroon/90 text-champagne border border-champagne/40 backdrop-blur-md shadow-xl flex items-center justify-center hover:scale-105 transition-all"
+                                title="Toggle Flute Music"
+                            >
+                                {isPlaying ? (
+                                    <span className="animate-pulse text-lg">🎵</span>
+                                ) : (
+                                    <span className="opacity-60 text-lg">🔇</span>
+                                )}
+                            </button>
+                            <button 
+                                onClick={handleNativeShare}
+                                className="w-12 h-12 rounded-full bg-champagne text-maroon border border-maroon/20 backdrop-blur-md shadow-xl flex items-center justify-center hover:scale-105 transition-all"
+                                title="Share Invitation"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                            </button>
+                            <a 
+                                href={`https://wa.me/?text=${encodeURIComponent(`You are cordially invited to the wedding of Anshika & Ashish: ` + window.location.href)}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="w-12 h-12 rounded-full bg-emerald-700 text-white shadow-xl flex items-center justify-center hover:scale-105 transition-all"
+                                title="Share on WhatsApp"
+                            >
+                                <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                            </a>
+                        </div>
+                    )}
+
+                    {/* ======================================================== */}
+                    {/* CINEMATIC OPENING SCREEN / GATE */}
+                    {/* ======================================================== */}
+                    {!isOpen ? (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-maroon text-cream p-6 overflow-hidden">
+                            {/* Decorative Animated Mandala Background */}
+                            <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
+                                <MandalaSvg className="w-[600px] h-[600px] text-champagne mandala-spin" />
+                            </div>
+
+                            <div className="relative z-10 max-w-xl w-full text-center p-8 rounded-2xl gold-border bg-maroon-dark/60 backdrop-blur-md shadow-2xl flex flex-col items-center">
+                                <p className="font-serif uppercase tracking-[0.25em] text-champagne text-xs sm:text-sm mb-3">
+                                    || Shri Ganeshay Namah ||
+                                </p>
+                                <p className="font-script text-2xl sm:text-3xl text-champagne-light mb-6">
+                                    Together with their families
+                                </p>
+
+                                <div className="space-y-2 my-2">
+                                    <h1 className="font-serif text-3xl sm:text-5xl tracking-wide text-cream font-bold">
+                                        {WEDDING_CONFIG.couple.bride.name}
+                                    </h1>
+                                    <p className="font-script text-3xl text-champagne">&</p>
+                                    <h1 className="font-serif text-3xl sm:text-5xl tracking-wide text-cream font-bold">
+                                        {WEDDING_CONFIG.couple.groom.name}
+                                    </h1>
+                                </div>
+
+                                <p className="font-serif text-sm sm:text-base text-cream/80 max-w-md mx-auto my-6 italic">
+                                    invite you to celebrate with them as they unite in holy matrimony
+                                </p>
+
+                                <button
+                                    onClick={handleOpenInvitation}
+                                    className="mt-4 px-8 py-3.5 bg-gradient-to-r from-champagne-dark via-champagne to-champagne-dark text-maroon font-serif font-bold tracking-widest text-sm rounded-full shadow-lg hover:brightness-110 transform transition hover:-translate-y-0.5 active:translate-y-0"
+                                >
+                                    OPEN INVITATION
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        /* ======================================================== */
+                        /* MAIN INVITATION WEBSITE CONTENT */
+                        /* ======================================================== */
+                        <div className="animate-fadeIn">
+                            {/* HERO SECTION */}
+                            <section className="relative min-h-screen flex flex-col items-center justify-center text-center p-6 bg-gradient-to-b from-maroon via-maroon-light to-maroon text-cream overflow-hidden">
+                                <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+                                    <MandalaSvg className="w-[700px] h-[700px] text-champagne mandala-spin" />
+                                </div>
+
+                                <div className="relative z-10 max-w-3xl space-y-6 my-auto pt-10">
+                                    <span className="font-serif tracking-[0.3em] text-champagne text-xs sm:text-sm uppercase block">
+                                        The Wedding Celebration
+                                    </span>
+                                    
+                                    <h1 className="font-serif text-4xl sm:text-7xl font-extrabold text-cream leading-tight">
+                                        {WEDDING_CONFIG.couple.bride.shortName} <span className="font-script text-champagne font-normal">&</span> {WEDDING_CONFIG.couple.groom.shortName}
+                                    </h1>
+
+                                    <p className="font-script text-2xl sm:text-3xl text-champagne-light">
+                                        "{WEDDING_CONFIG.couple.tagline}"
+                                    </p>
+
+                                    <div className="pt-4 flex items-center justify-center gap-4">
+                                        <div className="h-[1px] w-12 bg-champagne/50"></div>
+                                        <p className="font-serif tracking-widest text-lg sm:text-xl text-cream/90">
+                                            {WEDDING_CONFIG.couple.displayDate}
+                                        </p>
+                                        <div className="h-[1px] w-12 bg-champagne/50"></div>
+                                    </div>
+                                </div>
+
+                                <div className="relative z-10 pb-8 animate-bounce">
+                                    <a href="#countdown" className="text-champagne/80 hover:text-champagne flex flex-col items-center text-xs font-serif tracking-widest">
+                                        <span>SCROLL DOWN</span>
+                                        <svg className="w-4 h-4 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7-7-7"/></svg>
+                                    </a>
+                                </div>
+                            </section>
+
+                            {/* LIVE COUNTDOWN SECTION */}
+                            <section id="countdown" className="py-16 bg-cream border-y border-champagne/30 text-center px-4">
+                                <div className="max-w-4xl mx-auto">
+                                    <p className="font-serif text-maroon uppercase tracking-widest text-xs mb-2">Counting down to</p>
+                                    <h2 className="font-serif text-3xl sm:text-4xl text-maroon font-bold mb-8">The Big Day</h2>
+                                    
+                                    <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-xl mx-auto">
+                                        {[
+                                            { label: 'Days', val: timeLeft.days },
+                                            { label: 'Hours', val: timeLeft.hours },
+                                            { label: 'Minutes', val: timeLeft.minutes },
+                                            { label: 'Seconds', val: timeLeft.seconds }
+                                        ].map((item, idx) => (
+                                            <div key={idx} className="bg-blush border border-champagne/40 rounded-xl p-3 sm:p-5 shadow-sm">
+                                                <span className="font-serif text-2xl sm:text-4xl font-bold text-maroon block">
+                                                    {String(item.val).padStart(2, '0')}
+                                                </span>
+                                                <span className="font-sans text-[10px] sm:text-xs text-velvet/70 uppercase tracking-wider">
+                                                    {item.label}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* FAMILY BLESSINGS SECTION */}
+                            <section className="py-20 px-6 max-w-5xl mx-auto text-center">
+                                <MandalaSvg className="w-16 h-16 mx-auto mb-4 text-champagne-dark" />
+                                <p className="font-script text-2xl text-maroon mb-1">With the blessings of our families</p>
+                                <h2 className="font-serif text-3xl sm:text-4xl text-maroon font-bold mb-12">Beloved Parents</h2>
+
+                                <div className="grid md:grid-cols-2 gap-8 sm:gap-12">
+                                    {/* Bride's Parents */}
+                                    <div className="bg-white/80 p-8 rounded-2xl gold-border shadow-sm flex flex-col items-center">
+                                        <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-champagne mb-4">
+                                            <img src={WEDDING_CONFIG.couple.bride.photo} alt="Bride" className="w-full h-full object-cover" />
+                                        </div>
+                                        <h3 className="font-serif text-xl font-bold text-maroon mb-2">Bride's Family</h3>
+                                        <p className="text-sm font-semibold text-velvet">{WEDDING_CONFIG.couple.bride.name}</p>
+                                        <div className="w-12 h-[1px] bg-champagne my-3"></div>
+                                        <p className="text-xs text-velvet/80 uppercase tracking-wider font-medium">Daughter of</p>
+                                        <p className="text-sm text-velvet mt-1">{WEDDING_CONFIG.couple.bride.mother}</p>
+                                        <p className="text-sm text-velvet">{WEDDING_CONFIG.couple.bride.father}</p>
+                                    </div>
+
+                                    {/* Groom's Parents */}
+                                    <div className="bg-white/80 p-8 rounded-2xl gold-border shadow-sm flex flex-col items-center">
+                                        <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-champagne mb-4">
+                                            <img src={WEDDING_CONFIG.couple.groom.photo} alt="Groom" className="w-full h-full object-cover" />
+                                        </div>
+                                        <h3 className="font-serif text-xl font-bold text-maroon mb-2">Groom's Family</h3>
+                                        <p className="text-sm font-semibold text-velvet">{WEDDING_CONFIG.couple.groom.name}</p>
+                                        <div className="w-12 h-[1px] bg-champagne my-3"></div>
+                                        <p className="text-xs text-velvet/80 uppercase tracking-wider font-medium">Son of</p>
+                                        <p className="text-sm text-velvet mt-1">{WEDDING_CONFIG.couple.groom.mother}</p>
+                                        <p className="text-sm text-velvet">{WEDDING_CONFIG.couple.groom.father}</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* ENGAGEMENT & WEDDING CARDS SECTION */}
+                            <section className="py-20 bg-blush/60 px-6">
+                                <div className="max-w-5xl mx-auto space-y-16">
+                                    <div className="text-center">
+                                        <p className="font-serif uppercase tracking-widest text-xs text-maroon">Join Us In Celebration</p>
+                                        <h2 className="font-serif text-3xl sm:text-5xl text-maroon font-bold mt-1">Wedding Events</h2>
+                                    </div>
+
+                                    <div className="grid md:grid-cols-2 gap-10">
+                                        {/* Engagement Card */}
+                                        <div className="bg-cream rounded-2xl overflow-hidden gold-border shadow-lg flex flex-col">
+                                            <div className="h-56 overflow-hidden relative">
+                                                <img src={WEDDING_CONFIG.events.engagement.image} alt="Engagement Venue" className="w-full h-full object-cover hover:scale-105 transition duration-500" />
+                                                <div className="absolute top-4 left-4 bg-maroon/90 text-champagne px-3 py-1 rounded-full text-xs font-serif tracking-wider">
+                                                    PRE-WEDDING
+                                                </div>
+                                            </div>
+                                            <div className="p-8 flex-1 flex flex-col justify-between text-center">
+                                                <div>
+                                                    <h3 className="font-serif text-2xl font-bold text-maroon mb-2">
+                                                        {WEDDING_CONFIG.events.engagement.title}
+                                                    </h3>
+                                                    <p className="font-script text-xl text-champagne-dark mb-4">Two Hearts, One Promise</p>
+                                                    
+                                                    <div className="space-y-2 text-sm text-velvet/90 my-4">
+                                                        <p className="font-semibold">{WEDDING_CONFIG.events.engagement.date}</p>
+                                                        <p>{WEDDING_CONFIG.events.engagement.time}</p>
+                                                        <p className="font-serif text-maroon font-bold pt-2">{WEDDING_CONFIG.events.engagement.venue}</p>
+                                                        <p className="text-xs text-velvet/70">{WEDDING_CONFIG.events.engagement.address}</p>
+                                                    </div>
+                                                </div>
+                                                <a 
+                                                    href={WEDDING_CONFIG.events.engagement.mapUrl} 
+                                                    target="_blank" 
+                                                    rel="noreferrer"
+                                                    className="mt-6 inline-block w-full py-3 bg-maroon text-champagne font-serif text-xs tracking-widest rounded-lg hover:bg-maroon-dark transition"
+                                                >
+                                                    GET DIRECTIONS
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        {/* Wedding Card */}
+                                        <div className="bg-cream rounded-2xl overflow-hidden gold-border shadow-lg flex flex-col border-2 border-champagne">
+                                            <div className="h-56 overflow-hidden relative">
+                                                <img src={WEDDING_CONFIG.events.wedding.image} alt="Wedding Venue" className="w-full h-full object-cover hover:scale-105 transition duration-500" />
+                                                <div className="absolute top-4 left-4 bg-champagne text-maroon font-bold px-3 py-1 rounded-full text-xs font-serif tracking-wider">
+                                                    MAIN CEREMONY
+                                                </div>
+                                            </div>
+                                            <div className="p-8 flex-1 flex flex-col justify-between text-center">
+                                                <div>
+                                                    <h3 className="font-serif text-2xl font-bold text-maroon mb-2">
+                                                        {WEDDING_CONFIG.events.wedding.title}
+                                                    </h3>
+                                                    <p className="font-script text-xl text-champagne-dark mb-4">Blessing the union of two souls</p>
+                                                    
+                                                    <div className="space-y-2 text-sm text-velvet/90 my-4">
+                                                        <p className="font-semibold text-maroon">{WEDDING_CONFIG.events.wedding.date}</p>
+                                                        <p>{WEDDING_CONFIG.events.wedding.time}</p>
+                                                        <p className="font-serif text-maroon font-bold pt-2">{WEDDING_CONFIG.events.wedding.venue}</p>
+                                                        <p className="text-xs text-velvet/70">{WEDDING_CONFIG.events.wedding.address}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="mt-6 space-y-2">
+                                                    <a 
+                                                        href={WEDDING_CONFIG.events.wedding.mapUrl} 
+                                                        target="_blank" 
+                                                        rel="noreferrer"
+                                                        className="block w-full py-3 bg-maroon text-champagne font-serif text-xs tracking-widest rounded-lg hover:bg-maroon-dark transition"
+                                                    >
+                                                        GET DIRECTIONS
+                                                    </a>
+                                                    <a 
+                                                        href={generateCalendarLink()} 
+                                                        target="_blank" 
+                                                        rel="noreferrer"
+                                                        className="block w-full py-2.5 bg-champagne/20 text-maroon border border-champagne font-serif text-xs tracking-widest rounded-lg hover:bg-champagne/30 transition"
+                                                    >
+                                                        ADD TO CALENDAR
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* OUR STORY TIMELINE */}
+                            <section className="py-20 px-6 max-w-4xl mx-auto">
+                                <div className="text-center mb-16">
+                                    <p className="font-serif uppercase tracking-widest text-xs text-maroon">How It All Began</p>
+                                    <h2 className="font-serif text-3xl sm:text-4xl text-maroon font-bold mt-1">Our Story</h2>
+                                </div>
+
+                                <div className="relative border-l-2 border-champagne/50 ml-4 sm:ml-32 space-y-12">
+                                    {WEDDING_CONFIG.ourStory.map((item, idx) => (
+                                        <div key={idx} className="relative pl-8 sm:pl-12">
+                                            {/* Timeline Dot */}
+                                            <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-champagne border-4 border-cream"></div>
+                                            
+                                            <span className="sm:absolute sm:-left-32 sm:top-0 font-serif text-xs tracking-widest text-maroon/70 uppercase block mb-1 sm:mb-0">
+                                                {item.date}
+                                            </span>
+
+                                            <div className="bg-white p-6 rounded-xl gold-border shadow-sm grid md:grid-cols-3 gap-6 items-center">
+                                                <div className="md:col-span-2 space-y-2">
+                                                    <h3 className="font-serif text-xl font-bold text-maroon">{item.title}</h3>
+                                                    <p className="text-sm text-velvet/80 leading-relaxed">{item.desc}</p>
+                                                </div>
+                                                <div className="h-32 rounded-lg overflow-hidden border border-champagne/30">
+                                                    <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+
+                            {/* DETAILED SCHEDULE OF EVENTS */}
+                            <section className="py-20 bg-maroon text-cream px-6">
+                                <div className="max-w-4xl mx-auto text-center">
+                                    <p className="font-serif text-champagne uppercase tracking-widest text-xs">Itinerary</p>
+                                    <h2 className="font-serif text-3xl sm:text-4xl text-cream font-bold mt-1 mb-12">Program Schedule</h2>
+
+                                    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                                        {WEDDING_CONFIG.schedule.map((item, idx) => (
+                                            <div key={idx} className="bg-maroon-dark/80 p-6 rounded-xl border border-champagne/30 text-center flex flex-col justify-between">
+                                                <div>
+                                                    <p className="text-champagne font-serif text-xs tracking-widest">{item.date}</p>
+                                                    <h3 className="font-serif text-lg font-bold text-cream my-2">{item.title}</h3>
+                                                    <p className="text-xs text-cream/70">{item.time}</p>
+                                                </div>
+                                                <p className="text-xs text-champagne-light mt-4 pt-3 border-t border-champagne/20">{item.venue}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* PHOTO GALLERY SECTION */}
+                            <section className="py-20 px-6 max-w-6xl mx-auto">
+                                <div className="text-center mb-12">
+                                    <p className="font-serif uppercase tracking-widest text-xs text-maroon">Captured Moments</p>
+                                    <h2 className="font-serif text-3xl sm:text-4xl text-maroon font-bold mt-1">Photo Gallery</h2>
+                                </div>
+
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                    {WEDDING_CONFIG.gallery.map((imgUrl, idx) => (
+                                        <div 
+                                            key={idx} 
+                                            onClick={() => setActiveImage(imgUrl)}
+                                            className="h-64 rounded-xl overflow-hidden cursor-pointer gold-border group relative"
+                                        >
+                                            <img 
+                                                src={imgUrl} 
+                                                alt={`Gallery ${idx + 1}`} 
+                                                className="w-full h-full object-cover group-hover:scale-110 transition duration-500" 
+                                                loading="lazy"
+                                            />
+                                            <div className="absolute inset-0 bg-maroon/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                                <span className="text-cream font-serif text-xs tracking-widest bg-maroon/80 px-3 py-1 rounded-full">VIEW</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+
+                            {/* FULLSCREEN LIGHTBOX MODAL */}
+                            {activeImage && (
+                                <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4" onClick={() => setActiveImage(null)}>
+                                    <button className="absolute top-6 right-6 text-white text-3xl">&times;</button>
+                                    <img src={activeImage} alt="Expanded view" className="max-w-full max-h-[90vh] rounded-lg shadow-2xl object-contain" />
+                                </div>
+                            )}
+
+                            {/* RSVP FORM SECTION */}
+                            <section className="py-20 bg-blush px-6">
+                                <div className="max-w-2xl mx-auto bg-cream p-8 sm:p-12 rounded-2xl gold-border shadow-md">
+                                    <div className="text-center mb-8">
+                                        <p className="font-serif uppercase tracking-widest text-xs text-maroon">Are You Attending?</p>
+                                        <h2 className="font-serif text-3xl font-bold text-maroon mt-1">R.S.V.P</h2>
+                                        <p className="text-xs text-velvet/70 mt-2">Please respond by November 1, 2026</p>
+                                    </div>
+
+                                    {rsvpSubmitted ? (
+                                        <div className="p-6 bg-emerald-100 border border-emerald-300 text-emerald-800 rounded-xl text-center font-serif text-sm">
+                                            ✨ Thank you! Your RSVP has been received. We look forward to celebrating with you!
+                                        </div>
+                                    ) : (
+                                        <form onSubmit={handleRSVPSubmit} className="space-y-5">
+                                            <div>
+                                                <label className="block text-xs font-serif uppercase text-maroon mb-1">Your Full Name</label>
+                                                <input 
+                                                    type="text" 
+                                                    required 
+                                                    value={rsvpForm.name} 
+                                                    onChange={e => setRsvpForm({...rsvpForm, name: e.target.value})}
+                                                    className="w-full px-4 py-3 rounded-lg border border-champagne/50 bg-white text-sm focus:outline-none focus:border-maroon" 
+                                                    placeholder="Enter your name" 
+                                                />
+                                            </div>
+
+                                            <div className="grid sm:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-xs font-serif uppercase text-maroon mb-1">Phone Number</label>
+                                                    <input 
+                                                        type="tel" 
+                                                        required 
+                                                        value={rsvpForm.phone} 
+                                                        onChange={e => setRsvpForm({...rsvpForm, phone: e.target.value})}
+                                                        className="w-full px-4 py-3 rounded-lg border border-champagne/50 bg-white text-sm focus:outline-none focus:border-maroon" 
+                                                        placeholder="+91 98765 00000" 
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-serif uppercase text-maroon mb-1">Number of Guests</label>
+                                                    <select 
+                                                        value={rsvpForm.guests} 
+                                                        onChange={e => setRsvpForm({...rsvpForm, guests: e.target.value})}
+                                                        className="w-full px-4 py-3 rounded-lg border border-champagne/50 bg-white text-sm focus:outline-none focus:border-maroon"
+                                                    >
+                                                        {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n} {n === 1 ? 'Guest' : 'Guests'}</option>)}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-xs font-serif uppercase text-maroon mb-1">Will you join us?</label>
+                                                <div className="flex gap-6 mt-2">
+                                                    <label className="flex items-center gap-2 text-sm cursor-pointer">
+                                                        <input 
+                                                            type="radio" 
+                                                            name="attending" 
+                                                            value="yes" 
+                                                            checked={rsvpForm.attending === 'yes'} 
+                                                            onChange={e => setRsvpForm({...rsvpForm, attending: e.target.value})}
+                                                            className="text-maroon accent-maroon" 
+                                                        />
+                                                        Joyfully Accepts
+                                                    </label>
+                                                    <label className="flex items-center gap-2 text-sm cursor-pointer">
+                                                        <input 
+                                                            type="radio" 
+                                                            name="attending" 
+                                                            value="no" 
+                                                            checked={rsvpForm.attending === 'no'} 
+                                                            onChange={e => setRsvpForm({...rsvpForm, attending: e.target.value})}
+                                                            className="text-maroon accent-maroon" 
+                                                        />
+                                                        Regretfully Declines
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-xs font-serif uppercase text-maroon mb-1">Warm Wishes / Message</label>
+                                                <textarea 
+                                                    rows="3" 
+                                                    value={rsvpForm.message} 
+                                                    onChange={e => setRsvpForm({...rsvpForm, message: e.target.value})}
+                                                    className="w-full px-4 py-3 rounded-lg border border-champagne/50 bg-white text-sm focus:outline-none focus:border-maroon" 
+                                                    placeholder="Leave a message for the couple..."
+                                                ></textarea>
+                                            </div>
+
+                                            <button 
+                                                type="submit" 
+                                                className="w-full py-3.5 bg-maroon text-champagne font-serif font-bold tracking-widest text-xs rounded-lg hover:bg-maroon-dark transition shadow-md"
+                                            >
+                                                SUBMIT RSVP
+                                            </button>
+                                        </form>
+                                    )}
+                                </div>
+                            </section>
+
+                            {/* CONTACT HELP SECTION */}
+                            <section className="py-16 px-6 max-w-4xl mx-auto text-center">
+                                <h3 className="font-serif text-2xl font-bold text-maroon mb-2">Need Any Assistance?</h3>
+                                <p className="text-xs text-velvet/70 mb-8">Feel free to reach out to our families for travel or accommodation help.</p>
+
+                                <div className="grid sm:grid-cols-2 gap-6 max-w-xl mx-auto">
+                                    {WEDDING_CONFIG.contacts.map((contact, idx) => (
+                                        <div key={idx} className="bg-white p-5 rounded-xl border border-champagne/40">
+                                            <p className="text-xs font-serif text-champagne-dark uppercase">{contact.relation}</p>
+                                            <p className="font-semibold text-maroon text-sm mt-1">{contact.name}</p>
+                                            <a href={`tel:${contact.phone}`} className="text-xs text-velvet/80 hover:text-maroon mt-1 inline-block">
+                                                📞 {contact.phone}
+                                            </a>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+
+                            {/* ELEGANT FOOTER */}
+                            <footer className="py-12 bg-maroon-dark text-cream text-center border-t border-champagne/30">
+                                <MandalaSvg className="w-12 h-12 mx-auto mb-3 text-champagne/60" />
+                                <h2 className="font-serif text-2xl font-bold tracking-wider text-cream">
+                                    {WEDDING_CONFIG.couple.bride.shortName} <span className="font-script text-champagne">&</span> {WEDDING_CONFIG.couple.groom.shortName}
+                                </h2>
+                                <p className="font-serif text-xs text-champagne tracking-widest my-2">25 • 11 • 2026</p>
+                                <p className="font-script text-lg text-cream/70 mt-4">"Made with love, for a lifetime of memories."</p>
+                            </footer>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
